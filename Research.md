@@ -5,4 +5,7 @@
 ---
 ## Similar Papers: 
 Neutral Point of View Detecting [Bias](https://doi.org/10.1145/3184558.3191640)
+
+Wikipedia vs Britannica Who is more [Biased](https://www.hbs.edu/ris/Publication%20Files/15-023_e044cf50-f621-4759-a827-e9a3bf8920c0.pdf)
+- This article shows that Wikipedia often starts out more biased than Britannica, but its bias decreases as more people edit it
 ---
