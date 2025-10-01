@@ -7,7 +7,7 @@ Will Racz
 ## Citation Links
 [Research Papers](Research.md)
 
-##Abstract
+## Abstract
 Our project focuses on indentifying bias from Wikipedia by looking at article size, number of refrences, and history of edits. We want to connect how editing behavior can correlate to systemic bias or other underlying patterns. 
 
 
