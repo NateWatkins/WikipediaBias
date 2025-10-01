@@ -18,8 +18,8 @@ Our project focuses on indentifying bias from Wikipedia by looking at article si
 
 
 ## Potential Questions:
-Does Google’s search ranking of Wikipedia amplify systemic bias by making it the “first source” people read?
-Do Wikipedia’s content gaps reveal more about bias than the content itself?
+- Does Google’s search ranking of Wikipedia amplify systemic bias by making it the “first source” people read?
+- Do Wikipedia’s content gaps reveal more about bias than the content itself?
 - What do Wikipedia's content gaps show about the overall bias of the site?
 
 At what point can a socially accepted lie become fact in Wikipedia
