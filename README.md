@@ -24,3 +24,12 @@ Do Wikipedia’s content gaps reveal more about bias than the content itself?
 
 At what point can a socially accepted lie become fact in Wikipedia
 
+
+
+**test-wikipedia.py**
+Outputs: 
+Columns: LengthBytes | # of Refs | LastEdited (UTC)
+"Article Name"
+      25303 |  563 | 2025-09-28T22:41:23Z
+
+  
