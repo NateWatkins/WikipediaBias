@@ -12,10 +12,16 @@ Our project focuses on indentifying bias from Wikipedia by looking at article si
 
 
 ## Methodology
-- Use the Wikipedia API program to collect article metadata such as length in bytes, number of references, and last edited timestamp.  
-- Identify and track patterns of growth and references over time.  
-- Connect these metadata points to questions of bias and systemic gaps.  
+- Found 25 most contraversial persons from each gender -> we will extrapolate to 50,100 people to analyze trends
+- Found the averages of length and number of refrences then look at findings
 
+
+## Results
+- 25 People
+      - 5000 bit length difference between genders
+      - 60 more refrences on pages for women
+
+  
 
 ## Potential Questions:
 - Does Google’s search ranking of Wikipedia amplify systemic bias by making it the “first source” people read?
@@ -23,6 +29,12 @@ Our project focuses on indentifying bias from Wikipedia by looking at article si
 - What do Wikipedia's content gaps show about the overall bias of the site?
 
 At what point can a socially accepted lie become fact in Wikipedia
+
+- Analyzing bias from a gender stand point
+        - Do wikipedia editors spend more time on pages for women than men?
+
+
+  
 
 
 
