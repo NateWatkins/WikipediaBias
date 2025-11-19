@@ -1,0 +1,21 @@
+\begin{thebibliography}{1}
+
+\bibitem{guardrails2025biascheck}
+guardrails-ai contributors.
+\newblock bias\_check.
+\newblock \url{https://github.com/guardrails-ai/bias_check}, 2025.
+\newblock Accessed: 2025-11-19.
+
+\bibitem{parvezkhan2025mediabias}
+Parvez Khan.
+\newblock Media-bias-detection.
+\newblock \url{https://github.com/Parvezkhan0/Media-Bias-Detection}, 2025.
+\newblock Accessed: 2025-11-19.
+
+\bibitem{watkins2025wiki}
+Nate Watkins.
+\newblock Wikipediabias: Project repository.
+\newblock \url{https://github.com/NateWatkins/WikipediaBias}, 2025.
+\newblock Accessed: 2025-11-19.
+
+\end{thebibliography}
