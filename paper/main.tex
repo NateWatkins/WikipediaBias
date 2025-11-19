@@ -4,7 +4,7 @@
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{hyperref}
 
-\title{Prototype Bias Checker: A Lightweight System for Detecting Source and Automation Bias}
+\title{Where Does Wikipedia Stand? A Simple Cross-Source Bias Checker Across Broad Topics}
 \author{Gabriel Giancarlo, Will Gatlin, Khalid AL-Mahmoud}
 \date{\today}
 
@@ -13,63 +13,149 @@
 \maketitle
 
 \begin{abstract}
-This project outlines a simple prototype for a ``bias checker''—a lightweight tool that flags possible bias patterns in news and online text. The system focuses on three core ideas: (1) the distribution of sources used, (2) the presence of repeated stylistic or framing signals, and (3) the degree of automation or template-like patterns in the writing. The goal is not to classify political leaning, but to surface signals that help readers judge reliability, diversity, and neutrality.
+This project compares Wikipedia to several commonly perceived “neutral” information sources using a lightweight bias-checking model. Instead of trying to label content as left, right, or unbiased, the goal is to surface simple indicators like (1) source diversity, (2) repeated framing or stylistic patterns, and (3) automation-like structure. We collect around 15 articles per topic from five major outlets plus Wikipedia, and because the topics are broad, some sources have missing entries (NA). The model applies consistent scoring to all articles and allows us to compare where Wikipedia falls relative to other sources.
 \end{abstract}
 
 \section{Introduction}
 
-Online information is shaped by both human writing and automated systems. Even simple workflows—RSS feeds, templated text, summarizers, or API-generated articles—can introduce patterned bias. The purpose of this project is to build a minimal, transparent bias-checking tool that highlights such patterns rather than making political judgments.
+People often argue about whether Wikipedia is neutral or biased, but it’s hard to compare it directly to news articles or other “trusted” information sources. At the same time, most online writing—whether it’s Wikipedia, RSS feeds, or major news outlets—follows patterns that can unintentionally reveal bias, such as limited sources, repeated framing terms, or automated structures.
 
-The tool follows a small decision process: inspect the sources referenced, detect repeated styles or phrasing, and check whether the text resembles automated or templated writing. These checks are intentionally simple so that users can interpret the results directly.
+The purpose of this project is to build a small, transparent bias-checking tool and use it to compare Wikipedia to five major information sources across several broad topics. The tool looks at structural features rather than political categories, since those are more measurable and easier to apply consistently.
 
 \section{Related Work}
 
-Prior work on media bias typically focuses on political alignment or ideological labeling. Our approach differs by emphasizing structural signals: source concentration, repeated phrasing, or signs of automation. Research on automation bias shows that users may over-trust text that appears clean or consistent, even if it is heavily automated. Studies on source diversity similarly show that narrow citation or link patterns can shape information emphasis.
+Most research on media bias focuses on political leaning or ideological labeling, but a lot of recent work argues that structural patterns—like how articles phrase things, what sources they rely on, and whether writing seems automated—can also shape how information is interpreted. Studies on source diversity show that articles drawing from a narrow set of domains can unintentionally reinforce certain viewpoints. Research on automation bias shows that people tend to trust consistent, template-like writing even when it is produced by bots or algorithmic processes.
+
+None of these studies look directly at Wikipedia vs. news sources in the way we do, but they motivate our use of proxies such as source diversity, framing repetition, and automation signals.
 
 \section{Methodology}
 
-\subsection{Data Collection}
-The bias checker accepts any text input, a URL, or an RSS feed item. For pages, a small scraper collects the article text, visible links, and metadata. For feeds, the tool uses the RSS XML fields as provided.
+\subsection{Motivating vs. Operationalized Research Questions}
 
-\subsection{Bias Checks}
-The system performs three lightweight checks:
+The motivating question behind the project is:
+\begin{quote}
+\textit{Where does Wikipedia stand relative to other sources that people usually consider “unbiased”?}
+\end{quote}
+
+This question is too broad to measure directly, so we operationalize it as:
+\begin{quote}
+\textit{Across a set of broad topics, how does Wikipedia’s source diversity, language framing, and structural uniformity compare to five mainstream information sources?}
+\end{quote}
+
+This version lets us compute actual numbers and compare across outlets.
+
+\subsection{Data Collection and Sources}
+
+For each topic (like climate, health, technology, etc.), we collected about 15 articles per outlet when possible. Wikipedia contributes one main article per topic. Because topics are broad, some sources naturally had missing results (NA), which we simply excluded from averaging.
+
+All code for scraping, parsing, and scoring is available at:
+
+\begin{center}
+\href{https://github.com/NateWatkins/WikipediaBias}{https://github.com/NateWatkins/WikipediaBias}
+\end{center}
+
+\subsection{Why We Use Proxies Instead of Measuring “Bias” Directly}
+
+Bias and neutrality are abstract ideas, so instead we measure smaller, observable indicators (“proxies”) that relate to them. We use three proxies:
+
+\subsubsection{1. Source Diversity}
+
+Counts how many different external domains appear in the article:
+
+\[
+\text{SourceDiversity} = \lvert \text{distinct domains} \rvert
+\]
+
+More domains usually means broader information coverage.
+
+\subsubsection{2. Framing / Language Patterns}
+
+Repeated phrasing or emotional wording can signal subtle bias. We track:
+
+\begin{itemize}
+\item repeated sentence stems,
+\item repeated descriptive adjectives,
+\item emotionally loaded keywords.
+\end{itemize}
+
+
+FramingScore = RepeatedPhrases + LoadedTerms \ TotalSentences
+
+
+\subsubsection{3. Automation / Structural Uniformity}
+
+Template-like writing and low sentence-length variance can signal automation or very strict editing structure. We track:
+
+\begin{itemize}
+\item low variance in sentence length,
+\item near-duplicate sentences,
+\item repeated paragraph openings.
+\end{itemize}
+\subsection{Measurement Pipeline}
+Every article will go through the same steps:
 
 \begin{enumerate}
-    \item \textbf{Source Distribution:} Count domains linked or cited. A high concentration suggests low diversity.
-    \item \textbf{Framing Patterns:} Detect repeated adjectives, loaded terms, or template sentences.
-    \item \textbf{Automation Signals:} Identify signs of machine-generated or templated writing, such as repeated structure or identical paragraph openings.
+\item Load or scrape the full text.
+\item Extract visible links, sentences, and structural elements.
+\item Compute the three proxy scores.
+\item Store everything in JSON for reproducibility.
 \end{enumerate}
 
-Each check produces a small score and a list of examples instead of a binary ``biased/unbiased'' label.
+\subsection{Comparison Strategy}
+
+Once all scores are collected, we compare Wikipedia directly against the average of the five other outlets. Comparisons are done:
+
+\begin{itemize}
+\item within each topic first, and
+\item then across topics (NA values ignored).
+\end{itemize}
+
+For each proxy:
+
+\[
+\text{Difference} = \text{WikipediaMean} - \text{SourceGroupMean}
+\]
+
+A positive or negative difference tells us which side of the range Wikipedia tends to fall on.
+
+\subsection{How This Connects Back to the Big Question}
+
+If Wikipedia shows wider source diversity, lower framing repetition, or different automation scores, that helps position it relative to other outlets. The goal is not to label Wikipedia as unbiased or biased, but to understand how its structure compares to other widely used information sources.
 
 \section{Results}
 
-In small tests with common news articles, the tool detected clear differences:
+After running the model across the collected articles, we found clear differences between sources:
+
 \begin{itemize}
-    \item Some outlets referenced only one or two external domains.
-    \item Certain articles reused the same framing adjectives across sections.
-    \item Several syndicated or AI-assisted pieces showed near-identical paragraph structures.
+    \item Some outlets only cited one or two external domains for multiple topics.
+    \item A few outlets used the same adjectives or phrasing patterns repeatedly across several articles.
+    \item Wikipedia generally had more references but sometimes more structural uniformity, likely because of standardization in its writing style.
+    \item Some AI-assisted or syndicated news pieces showed near-identical paragraph structures.
 \end{itemize}
 
-These simple signals were easy for readers to interpret and matched manual expectations.
+These patterns lined up with what we expected from manual inspection.
 
 \section{Discussion}
 
-During development, a consistent challenge was the uneven availability of programmatic access across news sources. Some outlets maintain full APIs with structured article data, while others limit access to RSS feeds or provide no programmatic entry point at all. These differences directly affected data collection: sources with open APIs allowed consistent retrieval of text and metadata, whereas RSS-based sources offered only titles, summaries, and links. In several cases, paywalls or restricted developer programs prevented automated collection entirely.
+One of the biggest issues we ran into was uneven access to article content. Some outlets offer full APIs, others only RSS feeds, and some require scraping with caution due to paywalls or terms of service. These differences affected which articles we could include.
 
-These access constraints shaped both the size and the structure of the dataset. Articles from API-supported outlets could be processed uniformly, while others required additional scraping steps or were excluded due to terms of service. As a result, the tool's coverage reflects not only methodological choices but also the practical realities of working with heterogeneous news infrastructures. Any system that analyzes online information at scale must account for these disparities, since API availability and feed structure strongly influence what data can be obtained and how complete the analysis can be.
+Another challenge was the broadness of the topics. Since we picked general themes (like “technology” or “health”), not every source covered every topic during our time window. This created NA values, but instead of forcing coverage, we simply left missing entries out of average calculations.
+
+Overall, the results don’t say whether Wikipedia is unbiased, but they do show how it compares structurally to five other information sources.
+
 \section{Future Work}
 
-Possible extensions include:
+Future improvements could include:
+
 \begin{itemize}
-    \item scoring source variety relative to topic norms,
-    \item comparing an article's framing to a neutral reference dataset,
-    \item detecting more refined markers of automation,
-    \item exporting standardized bias summaries.
+    \item comparing source variety against topic-specific expectations,
+    \item analyzing more subtle linguistic or rhetorical patterns,
+    \item detecting more advanced forms of automated writing,
+    \item generating standardized bias-summary pages for each topic.
 \end{itemize}
 
 \section{Conclusion}
 
-We present a simple, transparent bias-checking tool that highlights source concentration, repeated framing, and automation signals. The system is intentionally lightweight, providing evidence rather than labels, and is designed as a practical aid for readers evaluating online information.
+This project presents a simple bias-checking approach that compares Wikipedia to five other major outlets using structural indicators like source diversity, framing patterns, and automation signals. The tool is intentionally minimal and interpretable, and although it doesn’t classify bias directly, it helps highlight where different sources sit in relation to one another.
 
 \end{document}
