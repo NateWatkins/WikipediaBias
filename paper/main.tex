@@ -1,50 +1,75 @@
-\documentclass[12pt]{article}
-
-% ---------- Packages ----------
+\documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{natbib}
-\usepackage{geometry}
-\usepackage{setspace}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amsfonts, amssymb}
 \usepackage{hyperref}
-\usepackage{booktabs}
-\usepackage{caption}
 
-% ---------- Basic setup ----------
-\geometry{margin=1in}
-\setstretch{1.25}
-\hypersetup{
-  colorlinks = true,
-  linkcolor = blue,
-  citecolor = blue,
-  urlcolor  = blue
-}
-
-% ---------- Metadata ----------
-\title{Wikipedia vs. News: A Comparative Study of Framing Bias in Politically Charged Topics}
-\author{Nathan Watkins}
+\title{Prototype Bias Checker: A Lightweight System for Detecting Source and Automation Bias}
+\author{Gabriel Giancarlo, Will Gatlin, Khalid AL-Mahmoud}
 \date{\today}
 
-% ---------- Document ----------
 \begin{document}
 
 \maketitle
-\tableofcontents
-\newpage
 
-\input{sections/abstract}
-\input{sections/introduction}
-\input{sections/related-work}
-\input{sections/methodology}
-\input{sections/results}
-\input{sections/discussion}
-\input{sections/conclusion}
+\begin{abstract}
+This project outlines a simple prototype for a ``bias checker''—a lightweight tool that flags possible bias patterns in news and online text. The system focuses on three core ideas: (1) the distribution of sources used, (2) the presence of repeated stylistic or framing signals, and (3) the degree of automation or template-like patterns in the writing. The goal is not to classify political leaning, but to surface signals that help readers judge reliability, diversity, and neutrality.
+\end{abstract}
 
-\newpage
-\bibliographystyle{apalike}
-\bibliography{references}
+\section{Introduction}
 
-\appendix
-\input{sections/appendix-AI-usage}
+Online information is shaped by both human writing and automated systems. Even simple workflows—RSS feeds, templated text, summarizers, or API-generated articles—can introduce patterned bias. The purpose of this project is to build a minimal, transparent bias-checking tool that highlights such patterns rather than making political judgments.
+
+The tool follows a small decision process: inspect the sources referenced, detect repeated styles or phrasing, and check whether the text resembles automated or templated writing. These checks are intentionally simple so that users can interpret the results directly.
+
+\section{Related Work}
+
+Prior work on media bias typically focuses on political alignment or ideological labeling. Our approach differs by emphasizing structural signals: source concentration, repeated phrasing, or signs of automation. Research on automation bias shows that users may over-trust text that appears clean or consistent, even if it is heavily automated. Studies on source diversity similarly show that narrow citation or link patterns can shape information emphasis.
+
+\section{Methodology}
+
+\subsection{Data Collection}
+The bias checker accepts any text input, a URL, or an RSS feed item. For pages, a small scraper collects the article text, visible links, and metadata. For feeds, the tool uses the RSS XML fields as provided.
+
+\subsection{Bias Checks}
+The system performs three lightweight checks:
+
+\begin{enumerate}
+    \item \textbf{Source Distribution:} Count domains linked or cited. A high concentration suggests low diversity.
+    \item \textbf{Framing Patterns:} Detect repeated adjectives, loaded terms, or template sentences.
+    \item \textbf{Automation Signals:} Identify signs of machine-generated or templated writing, such as repeated structure or identical paragraph openings.
+\end{enumerate}
+
+Each check produces a small score and a list of examples instead of a binary ``biased/unbiased'' label.
+
+\section{Results}
+
+In small tests with common news articles, the tool detected clear differences:
+\begin{itemize}
+    \item Some outlets referenced only one or two external domains.
+    \item Certain articles reused the same framing adjectives across sections.
+    \item Several syndicated or AI-assisted pieces showed near-identical paragraph structures.
+\end{itemize}
+
+These simple signals were easy for readers to interpret and matched manual expectations.
+
+\section{Discussion}
+
+During development, a consistent challenge was the uneven availability of programmatic access across news sources. Some outlets maintain full APIs with structured article data, while others limit access to RSS feeds or provide no programmatic entry point at all. These differences directly affected data collection: sources with open APIs allowed consistent retrieval of text and metadata, whereas RSS-based sources offered only titles, summaries, and links. In several cases, paywalls or restricted developer programs prevented automated collection entirely.
+
+These access constraints shaped both the size and the structure of the dataset. Articles from API-supported outlets could be processed uniformly, while others required additional scraping steps or were excluded due to terms of service. As a result, the tool's coverage reflects not only methodological choices but also the practical realities of working with heterogeneous news infrastructures. Any system that analyzes online information at scale must account for these disparities, since API availability and feed structure strongly influence what data can be obtained and how complete the analysis can be.
+\section{Future Work}
+
+Possible extensions include:
+\begin{itemize}
+    \item scoring source variety relative to topic norms,
+    \item comparing an article's framing to a neutral reference dataset,
+    \item detecting more refined markers of automation,
+    \item exporting standardized bias summaries.
+\end{itemize}
+
+\section{Conclusion}
+
+We present a simple, transparent bias-checking tool that highlights source concentration, repeated framing, and automation signals. The system is intentionally lightweight, providing evidence rather than labels, and is designed as a practical aid for readers evaluating online information.
 
 \end{document}
